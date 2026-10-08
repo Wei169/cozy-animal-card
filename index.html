@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>奶油泡泡｜Cozy Animal Card</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+:root{
+  --bg:#f7efe6; --panel:#fffaf5; --ink:#5d4a42; --accent:#e8b7b0;
+  --accent2:#cfe3cf; --accent3:#d9d1ef; --card:#fff8ef; --shadow:rgba(92,70,62,.18);
+  --mx:50%; --my:50%;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:"Noto Sans TC","PingFang TC",system-ui,sans-serif;color:var(--ink);background:
+radial-gradient(circle at 20% 15%,rgba(255,255,255,.95),transparent 30%),
+linear-gradient(135deg,#fbf5ee,#f3e7dc 55%,#eee7f6)}
+body{overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;border-radius:50%;filter:blur(30px);opacity:.5;pointer-events:none}
+body::before{width:250px;height:250px;background:#f6c9c0;right:-60px;top:10%}
+body::after{width:220px;height:220px;background:#cfe6d5;left:-60px;bottom:5%}
+.app{min-height:100vh;display:grid;grid-template-columns:minmax(340px,1.15fr) minmax(300px,.85fr);gap:40px;align-items:center;padding:42px clamp(20px,5vw,72px)}
+.stage{display:grid;place-items:center;perspective:1200px;min-height:720px}
+.card-wrap{width:min(88vw,380px);aspect-ratio:63/88;position:relative;transform-style:preserve-3d;transition:transform .22s ease}
+.card-wrap.flipped{transform:rotateY(180deg)}
+.card{position:absolute;inset:0;border-radius:30px;backface-visibility:hidden;overflow:hidden;box-shadow:0 28px 70px var(--shadow),0 4px 14px rgba(255,255,255,.9) inset;border:8px solid rgba(255,255,255,.72);background:var(--card);transform-style:preserve-3d}
+.card.back{transform:rotateY(180deg);display:grid;place-items:center;background:
+linear-gradient(145deg,#f9efe2,#f1dfd0)}
+.back-inner{width:84%;height:84%;border-radius:26px;border:2px dashed #cfb5a3;display:grid;place-items:center;text-align:center;padding:24px;background:rgba(255,255,255,.5)}
+.paw{font-size:72px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.08))}
+.card-front{padding:18px 18px 14px;height:100%;display:flex;flex-direction:column;gap:10px;position:relative}
+.holo{position:absolute;inset:-30%;background:
+radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.9),transparent 22%),
+conic-gradient(from 60deg,rgba(255,180,190,.22),rgba(190,230,205,.22),rgba(195,210,255,.22),rgba(240,200,255,.22),rgba(255,220,180,.22),rgba(255,180,190,.22));
+mix-blend-mode:soft-light;pointer-events:none;transform:translateZ(30px)}
+.sparkles{position:absolute;inset:0;pointer-events:none;background-image:
+radial-gradient(circle,#fff 0 1.5px,transparent 2px),
+radial-gradient(circle,#fff9 0 1px,transparent 1.8px);
+background-size:42px 42px,61px 61px;background-position:0 0,15px 19px;opacity:.55;animation:float 8s linear infinite}
+@keyframes float{to{background-position:42px 42px,76px 80px}}
+.topline{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:2}
+.name{font-size:30px;font-weight:900;letter-spacing:.03em;outline:none}
+.subtitle{font-size:12px;opacity:.72;margin-top:2px;outline:none}
+.hp{font-weight:900;font-size:22px;background:#fff4f1;border-radius:999px;padding:8px 12px;border:1px solid #f0ccc6;outline:none}
+.badge{display:inline-flex;width:max-content;padding:5px 10px;border-radius:999px;background:#efe7fb;font-size:11px;font-weight:800}
+.illustration{height:36%;border-radius:23px;background:linear-gradient(180deg,#dff0e6,#f7efe3);position:relative;overflow:hidden;border:2px solid rgba(255,255,255,.8);display:grid;place-items:center;box-shadow:0 9px 20px rgba(80,60,50,.08) inset}
+.cloud{position:absolute;background:#fff;border-radius:999px;opacity:.8}.c1{width:90px;height:28px;left:18px;top:24px}.c2{width:75px;height:24px;right:20px;top:54px}
+.grass{position:absolute;bottom:0;left:0;right:0;height:28%;background:linear-gradient(#d4e6c8,#c6dcb8)}
+.capy{position:relative;width:150px;height:105px;background:#b98d69;border-radius:56% 48% 45% 48%;z-index:3;box-shadow:0 14px 18px rgba(94,69,48,.18)}
+.capy:before{content:"";position:absolute;width:62px;height:68px;background:#b98d69;border-radius:50%;right:-22px;top:10px}
+.ear{position:absolute;width:18px;height:18px;background:#9f7659;border-radius:50%;right:21px;top:5px;z-index:4}
+.eye{position:absolute;width:6px;height:6px;background:#44362e;border-radius:50%;right:-1px;top:34px;z-index:5}
+.nose{position:absolute;width:10px;height:7px;background:#56463e;border-radius:50%;right:-27px;top:45px;z-index:5}
+.orange{position:absolute;width:31px;height:28px;background:#f2a85f;border-radius:50%;right:21px;top:-18px;z-index:6;box-shadow:inset -4px -4px 0 rgba(180,105,45,.12)}
+.orange:after{content:"";position:absolute;width:15px;height:7px;background:#739b63;border-radius:100% 0;left:17px;top:-4px;transform:rotate(-18deg)}
+.pillow{position:absolute;width:62px;height:46px;background:#f1c9d2;border-radius:18px;left:26px;bottom:12px;z-index:5;transform:rotate(-7deg);border:3px solid #f8dce3}
+.section{position:relative;z-index:2;background:rgba(255,255,255,.53);border:1px solid rgba(255,255,255,.8);border-radius:16px;padding:10px 12px}
+.section h3{margin:0 0 4px;font-size:13px}.section p{margin:0;font-size:11.5px;line-height:1.5;outline:none}
+.skill-row{display:grid;grid-template-columns:1fr;gap:7px}
+.skill{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;background:#fffaf7;border-radius:14px;padding:8px 10px;border:1px solid #eee1d7}
+.skill .icon{font-size:18px}.skill b{font-size:12px}.skill small{display:block;font-size:10px;opacity:.72;line-height:1.35}.power{font-weight:900;font-size:15px}
+.meta{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:9.5px;text-align:center}
+.meta div{background:#fff;border-radius:10px;padding:6px 4px}
+.footerline{display:flex;justify-content:space-between;font-size:8.5px;opacity:.7}
+.panel{background:rgba(255,250,245,.74);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.8);box-shadow:0 20px 60px rgba(92,70,62,.12);border-radius:28px;padding:28px}
+.panel h1{margin:0;font-size:clamp(28px,4vw,48px);line-height:1.05}
+.panel .lead{line-height:1.75;margin:12px 0 20px;color:#78645c}
+.controls{display:grid;gap:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+button,label.upload{appearance:none;border:0;border-radius:14px;padding:11px 15px;background:#fff;color:var(--ink);font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(92,70,62,.09);transition:.18s}
+button:hover,label.upload:hover{transform:translateY(-2px)}
+.primary{background:#e8b7b0;color:#fff}
+.theme{width:42px;height:42px;padding:0;border:3px solid #fff}
+.t1{background:#e8b7b0}.t2{background:#c8ddcd}.t3{background:#d7cbed}.t4{background:#d8b99d}
+.tip{font-size:12px;line-height:1.6;background:#fff7ef;padding:12px 14px;border-radius:14px;margin-top:14px}
+input[type=file]{display:none}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr;padding:24px 16px 36px;gap:22px}
+  .stage{min-height:610px}
+  .panel{padding:22px}
+}
+@media(max-width:430px){
+  .stage{min-height:560px}
+  .card-wrap{width:min(90vw,350px)}
+  .name{font-size:25px}.hp{font-size:18px}
+  .card-front{padding:15px 15px 12px;gap:8px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="stage">
+    <div class="card-wrap" id="cardWrap">
+      <article class="card front" id="captureCard">
+        <div class="holo"></div><div class="sparkles"></div>
+        <div class="card-front">
+          <div class="topline">
+            <div><div class="name" contenteditable="true">奶油泡泡</div><div class="subtitle" contenteditable="true">午後發呆小隊長</div></div>
+            <div class="hp" contenteditable="true">220 HP</div>
+          </div>
+          <div class="badge" contenteditable="true">Lovely Secret · 療癒系</div>
+
+          <div class="illustration" id="illustration">
+            <div class="cloud c1"></div><div class="cloud c2"></div><div class="grass"></div>
+            <div class="capy" id="capy"><div class="ear"></div><div class="eye"></div><div class="nose"></div><div class="orange"></div><div class="pillow"></div></div>
+          </div>
+
+          <div class="section">
+            <h3 contenteditable="true">🌼 慢吞吞療癒力</h3>
+            <p contenteditable="true">當周圍氣氛變得緊張時，自動釋放放鬆能量，讓大家慢慢平靜下來。</p>
+          </div>
+
+          <div class="skill-row">
+            <div class="skill">
+              <div class="icon">🍪</div>
+              <div><b contenteditable="true">軟萌打滾</b><small contenteditable="true">把煩惱一起滾走，回復好心情。</small></div>
+              <div class="power" contenteditable="true">30</div>
+            </div>
+            <div class="skill">
+              <div class="icon">🍪🌸</div>
+              <div><b contenteditable="true">午後抱抱時光</b><small contenteditable="true">展開慵懶下午茶結界，融化負面情緒。</small></div>
+              <div class="power" contenteditable="true">100</div>
+            </div>
+          </div>
+
+          <div class="meta">
+            <div>弱點<br><b contenteditable="true">空腹・早起</b></div>
+            <div>抗性<br><b contenteditable="true">焦慮 -30</b></div>
+            <div>成本<br><b contenteditable="true">🐾 × 1</b></div>
+          </div>
+          <div class="footerline">
+            <span contenteditable="true">Illus. Wei Wei</span>
+            <span contenteditable="true">LOVE-2026-01 · © 2026</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card back">
+        <div class="back-inner">
+          <div>
+            <div class="paw">🐾</div>
+            <h2>COZY FRIENDS</h2>
+            <p>Slow days are good days.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="badge">COZY ANIMAL CARD</div>
+    <h1>一張可以<br>慢慢玩的可愛卡牌。</h1>
+    <p class="lead">把戰鬥感拿掉，留下動物、日常、柔和粉彩與一點點會跟著你移動的光。卡片上的文字可以直接點擊修改。</p>
+    <div class="controls">
+      <div class="row">
+        <button class="primary" id="flipBtn">翻轉卡牌</button>
+        <button id="resetBtn">重置視角</button>
+        <button id="exportBtn">匯出 PNG</button>
+      </div>
+      <div class="row">
+        <label class="upload" for="uploadInput">上傳角色圖片</label>
+        <input id="uploadInput" type="file" accept="image/*">
+      </div>
+      <div>
+        <strong>主題色</strong>
+        <div class="row" style="margin-top:9px">
+          <button class="theme t1" data-theme="rose" title="櫻花草莓"></button>
+          <button class="theme t2" data-theme="mint" title="晨曦薄荷"></button>
+          <button class="theme t3" data-theme="lavender" title="薰衣草晚安"></button>
+          <button class="theme t4" data-theme="latte" title="奶茶拿鐵"></button>
+        </div>
+      </div>
+    </div>
+    <div class="tip">💡 桌機：移動滑鼠看 3D 視差。手機：用手指拖曳卡牌。想改文字時，直接點卡面上的文字即可。</div>
+  </aside>
+</main>
+<script>
+const wrap=document.getElementById('cardWrap');
+const stage=document.querySelector('.stage');
+let flipped=false,rx=0,ry=0;
+function applyTilt(){
+  const flip=flipped?180:0;
+  wrap.style.transform='rotateX('+rx+'deg) rotateY('+(ry+flip)+'deg)';
+}
+function moveTilt(clientX,clientY){
+  const r=stage.getBoundingClientRect();
+  const x=(clientX-r.left)/r.width, y=(clientY-r.top)/r.height;
+  ry=(x-.5)*16; rx=(.5-y)*16;
+  document.documentElement.style.setProperty('--mx',(x*100)+'%');
+  document.documentElement.style.setProperty('--my',(y*100)+'%');
+  applyTilt();
+}
+stage.addEventListener('mousemove',e=>moveTilt(e.clientX,e.clientY));
+stage.addEventListener('mouseleave',()=>{rx=0;ry=0;applyTilt()});
+stage.addEventListener('touchmove',e=>{const t=e.touches[0];moveTilt(t.clientX,t.clientY)},{passive:true});
+stage.addEventListener('touchend',()=>{rx=0;ry=0;applyTilt()});
+
+document.getElementById('flipBtn').onclick=()=>{flipped=!flipped;applyTilt()};
+document.getElementById('resetBtn').onclick=()=>{rx=0;ry=0;flipped=false;applyTilt()};
+
+const themes={
+ rose:['#f7efe6','#e8b7b0','#fff8ef','#f1c9d2'],
+ mint:['#eef5ee','#bdd8c4','#f8fff8','#d8eadc'],
+ lavender:['#f3eff8','#cfc2e5','#fbf8ff','#e2d8f2'],
+ latte:['#f5eee7','#caa98f','#fffaf5','#e7d2bf']
+};
+document.querySelectorAll('.theme').forEach(btn=>btn.onclick=()=>{
+ const t=themes[btn.dataset.theme];
+ document.documentElement.style.setProperty('--bg',t[0]);
+ document.documentElement.style.setProperty('--accent',t[1]);
+ document.documentElement.style.setProperty('--card',t[2]);
+ document.documentElement.style.setProperty('--accent3',t[3]);
+});
+
+document.getElementById('uploadInput').addEventListener('change',e=>{
+ const file=e.target.files?.[0]; if(!file)return;
+ const reader=new FileReader();
+ reader.onload=ev=>{
+   const box=document.getElementById('illustration');
+   box.style.backgroundImage='url("'+ev.target.result+'")';
+   box.style.backgroundSize='cover';
+   box.style.backgroundPosition='center';
+   document.getElementById('capy').style.display='none';
+   box.querySelectorAll('.cloud,.grass').forEach(el=>el.style.display='none');
+ };
+ reader.readAsDataURL(file);
+});
+
+document.getElementById('exportBtn').onclick=async()=>{
+ const card=document.getElementById('captureCard');
+ const canvas=await html2canvas(card,{scale:3,backgroundColor:null,useCORS:true});
+ const a=document.createElement('a');
+ a.download='cozy-animal-card.png';
+ a.href=canvas.toDataURL('image/png');
+ a.click();
+};
+</script>
+</body>
+</html>
